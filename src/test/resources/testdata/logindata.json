@@ -1,0 +1,35 @@
+{
+  "validLoginTest": {
+    "username": "Admin",
+    "password": "admin123",
+    "expectedTitle": "Dashboard"
+  },
+  "invalidLoginTest": {
+    "username": "Admin",
+    "password": "wrongpassword",
+    "expectedErrorMessage": "Invalid credentials"
+  },
+  "emptyPasswordTest": {
+    "username": "Admin",
+    "password": "",
+    "expectedErrorMessage": "Required"
+  },
+  "adminNavigationTest": {
+    "username": "Admin",
+    "password": "admin123",
+    "menuToClick": "Admin",
+    "expectedHeading": "Admin"
+  },
+  "pimNavigationTest": {
+    "username": "Admin",
+    "password": "admin123",
+    "menuToClick": "PIM",
+    "expectedHeading": "PIM"
+  },
+  "myInfoNavigationTest": {
+    "username": "Admin",
+    "password": "admin123",
+    "menuToClick": "MyInfo",
+    "expectedHeading": "My Info"
+  }
+} 
