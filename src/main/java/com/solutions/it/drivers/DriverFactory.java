@@ -22,6 +22,7 @@ public class DriverFactory {
         boolean headless = Boolean.parseBoolean(properties.getProperty("headless"));
         
         Log.info("Creating driver for browser: " + browser);
+        Log.info("Headless mode: " + headless);
         
         switch (browser.toLowerCase()) {
             case "chrome":
@@ -29,9 +30,15 @@ public class DriverFactory {
                 ChromeOptions chromeOptions = new ChromeOptions();
                 if (headless) {
                     chromeOptions.addArguments("--headless");
+                    // Additional options for Jenkins/CI environment
+                    chromeOptions.addArguments("--no-sandbox");
+                    chromeOptions.addArguments("--disable-dev-shm-usage");
+                    chromeOptions.addArguments("--window-size=1920,1080");
                 }
                 chromeOptions.addArguments("--start-maximized");
                 chromeOptions.addArguments("--disable-notifications");
+                // Handle CI environments that might be using older browsers
+                chromeOptions.setAcceptInsecureCerts(true);
                 driver = new ChromeDriver(chromeOptions);
                 break;
                 
@@ -40,7 +47,10 @@ public class DriverFactory {
                 FirefoxOptions firefoxOptions = new FirefoxOptions();
                 if (headless) {
                     firefoxOptions.addArguments("--headless");
+                    firefoxOptions.addArguments("--width=1920");
+                    firefoxOptions.addArguments("--height=1080");
                 }
+                firefoxOptions.setAcceptInsecureCerts(true);
                 driver = new FirefoxDriver(firefoxOptions);
                 break;
                 
@@ -59,7 +69,7 @@ public class DriverFactory {
                 driver = new ChromeDriver();
         }
         
-        if (!browser.equalsIgnoreCase("safari")) {
+        if (!browser.equalsIgnoreCase("safari") && !headless) {
             driver.manage().window().maximize();
         }
         
