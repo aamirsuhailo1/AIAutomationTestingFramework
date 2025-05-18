@@ -1,0 +1,71 @@
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "username": "johndoe",
+        "email": "john.doe@example.com",
+        "address": {
+            "street": "123 Main St",
+            "suite": "Apt 4B",
+            "city": "Boston",
+            "zipcode": "02108",
+            "geo": {
+                "lat": "42.3601",
+                "lng": "-71.0589"
+            }
+        },
+        "phone": "555-123-4567",
+        "website": "johndoe.com",
+        "company": {
+            "name": "ABC Tech",
+            "catchPhrase": "Leading the digital revolution",
+            "bs": "innovative solutions"
+        }
+    },
+    {
+        "id": 2,
+        "name": "Jane Smith",
+        "username": "janesmith",
+        "email": "jane.smith@example.com",
+        "address": {
+            "street": "456 Oak Ave",
+            "suite": "Suite 200",
+            "city": "San Francisco",
+            "zipcode": "94103",
+            "geo": {
+                "lat": "37.7749",
+                "lng": "-122.4194"
+            }
+        },
+        "phone": "555-987-6543",
+        "website": "janesmith.com",
+        "company": {
+            "name": "XYZ Consulting",
+            "catchPhrase": "Solving tomorrow's challenges today",
+            "bs": "strategic planning"
+        }
+    },
+    {
+        "id": 3,
+        "name": "Bob Johnson",
+        "username": "bobjohnson",
+        "email": "bob.johnson@example.com",
+        "address": {
+            "street": "789 Pine Rd",
+            "suite": "Unit 5C",
+            "city": "Chicago",
+            "zipcode": "60601",
+            "geo": {
+                "lat": "41.8781",
+                "lng": "-87.6298"
+            }
+        },
+        "phone": "555-456-7890",
+        "website": "bobjohnson.com",
+        "company": {
+            "name": "123 Industries",
+            "catchPhrase": "Building a better future",
+            "bs": "product development"
+        }
+    }
+] 

@@ -1,0 +1,44 @@
+[
+    {
+        "id": 1,
+        "postId": 1,
+        "name": "Alice Williams",
+        "email": "alice.williams@example.com",
+        "body": "Great introduction to API testing! I found the best practices section particularly helpful."
+    },
+    {
+        "id": 2,
+        "postId": 1,
+        "name": "Sam Brown",
+        "email": "sam.brown@example.com",
+        "body": "As someone new to API testing, this was very informative. Looking forward to more posts on this topic."
+    },
+    {
+        "id": 3,
+        "postId": 2,
+        "name": "Michael Davis",
+        "email": "michael.davis@example.com",
+        "body": "REST Assured has been a game-changer for our API testing workflow. Thanks for sharing these insights!"
+    },
+    {
+        "id": 4,
+        "postId": 3,
+        "name": "Emily Wilson",
+        "email": "emily.wilson@example.com",
+        "body": "We've recently implemented some of these best practices and have seen a significant improvement in our test efficiency."
+    },
+    {
+        "id": 5,
+        "postId": 4,
+        "name": "David Miller",
+        "email": "david.miller@example.com",
+        "body": "JSON Schema validation has helped us catch several contract violations before they reached production. Essential information!"
+    },
+    {
+        "id": 6,
+        "postId": 5,
+        "name": "Sarah Taylor",
+        "email": "sarah.taylor@example.com",
+        "body": "The performance testing strategies outlined here have been invaluable for our high-traffic API. Thank you!"
+    }
+] 

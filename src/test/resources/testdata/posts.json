@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "userId": 1,
+        "title": "Introduction to REST API Testing",
+        "body": "REST API testing is essential for ensuring the reliability and functionality of your API endpoints. This post explores the fundamentals of API testing and best practices."
+    },
+    {
+        "id": 2,
+        "userId": 1,
+        "title": "Using REST Assured for API Testing",
+        "body": "REST Assured is a powerful Java library for testing RESTful APIs. It provides a simple DSL for creating and verifying API requests and responses."
+    },
+    {
+        "id": 3,
+        "userId": 2,
+        "title": "API Test Automation Best Practices",
+        "body": "Automating API tests can significantly improve the efficiency of your testing process. This post discusses best practices for implementing API test automation."
+    },
+    {
+        "id": 4,
+        "userId": 2,
+        "title": "JSON Schema Validation in API Testing",
+        "body": "Validating the structure of API responses is crucial for ensuring API contract compliance. JSON Schema is a powerful tool for validating JSON responses."
+    },
+    {
+        "id": 5,
+        "userId": 3,
+        "title": "API Performance Testing Strategies",
+        "body": "Performance testing is essential for ensuring your API can handle the expected load. This post discusses strategies for effective API performance testing."
+    }
+] 

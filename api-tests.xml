@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="API Testing Suite" parallel="methods" thread-count="5">
+    <listeners>
+        <listener class-name="com.solutions.it.listeners.TestListener"/>
+        <listener class-name="com.solutions.it.listeners.RetryListener"/>
+    </listeners>
+    
+    <!-- All API Tests -->
+    <test name="All API Tests">
+        <groups>
+            <run>
+                <include name="api"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="com.solutions.tests.api.*"/>
+        </packages>
+    </test>
+    
+    <!-- API Smoke Tests -->
+    <test name="API Smoke Tests">
+        <groups>
+            <run>
+                <include name="smoke"/>
+                <include name="api"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="com.solutions.tests.api.*"/>
+        </packages>
+    </test>
+    
+    <!-- API Regression Tests -->
+    <test name="API Regression Tests">
+        <groups>
+            <run>
+                <include name="regression"/>
+                <include name="api"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="com.solutions.tests.api.*"/>
+        </packages>
+    </test>
+    
+    <!-- API Sanity Tests -->
+    <test name="API Sanity Tests">
+        <groups>
+            <run>
+                <include name="sanity"/>
+                <include name="api"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="com.solutions.tests.api.*"/>
+        </packages>
+    </test>
+    
+    <!-- API HTTP Method Tests -->
+    <test name="API HTTP Method Tests">
+        <groups>
+            <run>
+                <include name="get"/>
+                <include name="post"/>
+                <include name="put"/>
+                <include name="patch"/>
+                <include name="delete"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="com.solutions.tests.api.*"/>
+        </packages>
+    </test>
+    
+    <!-- API Critical Tests -->
+    <test name="API Critical Tests">
+        <groups>
+            <run>
+                <include name="critical"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="com.solutions.tests.api.*"/>
+        </packages>
+    </test>
+    
+    <!-- API Negative Tests -->
+    <test name="API Negative Tests">
+        <groups>
+            <run>
+                <include name="negative"/>
+            </run>
+        </groups>
+        <packages>
+            <package name="com.solutions.tests.api.*"/>
+        </packages>
+    </test>
+</suite> 

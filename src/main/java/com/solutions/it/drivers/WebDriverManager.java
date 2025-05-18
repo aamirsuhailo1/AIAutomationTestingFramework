@@ -40,11 +40,25 @@ public class WebDriverManager {
     }
     
     /**
+     * Check if browser initialization should be skipped (for API tests)
+     * 
+     * @return true if browser initialization should be skipped
+     */
+    private static boolean shouldSkipBrowser() {
+        return "true".equalsIgnoreCase(System.getProperty("skipBrowser"));
+    }
+    
+    /**
      * Gets the current thread's WebDriver instance or creates a new one if none exists
      * 
-     * @return The WebDriver instance
+     * @return The WebDriver instance or null if skipBrowser is set
      */
     public static WebDriver getDriver() {
+        if (shouldSkipBrowser()) {
+            Log.info("Skipping WebDriver initialization as skipBrowser is set to true (API tests only)");
+            return null;
+        }
+        
         if (DRIVER_THREAD_LOCAL.get() == null) {
             initializeDriver();
         }
@@ -55,6 +69,12 @@ public class WebDriverManager {
      * Initializes a new WebDriver instance based on configured browser
      */
     public static void initializeDriver() {
+        // Skip WebDriver initialization if skipBrowser is set to true
+        if (shouldSkipBrowser()) {
+            Log.info("Skipping WebDriver initialization as skipBrowser is set to true (API tests only)");
+            return;
+        }
+        
         String browser = CONFIG.getBrowser().toLowerCase();
         
         WebDriverFactory factory = FACTORIES.getOrDefault(browser, FACTORIES.get("chrome"));
@@ -132,6 +152,11 @@ public class WebDriverManager {
      * Quits the WebDriver instance and removes it from the ThreadLocal
      */
     public static void quitDriver() {
+        // Skip if we're in API testing mode
+        if (shouldSkipBrowser()) {
+            return;
+        }
+        
         WebDriver driver = DRIVER_THREAD_LOCAL.get();
         if (driver != null) {
             if (Log.getLogger().isInfoEnabled()) {
