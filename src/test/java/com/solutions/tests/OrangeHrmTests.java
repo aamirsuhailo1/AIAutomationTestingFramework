@@ -3,24 +3,30 @@ package com.solutions.tests;
 import com.solutions.it.base.BaseTest;
 import com.solutions.it.pages.HomePage;
 import com.solutions.it.pages.LoginPage;
-import com.solutions.it.utils.JsonDataReader;
+import com.solutions.it.utils.DataProviderUtils;
 import com.solutions.it.utils.Log;
-import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Map;
 
+/**
+ * Test class for OrangeHRM application.
+ * Contains tests for login and navigation functionality.
+ */
 public class OrangeHrmTests extends BaseTest {
     
-    private static final String TEST_DATA_FILE = "src/test/resources/testdata/logindata.json";
-    
-    @Test(description = "Verify user can login with valid credentials")
-    public void testValidLogin() {
+    /**
+     * Verifies that a user can login with valid credentials
+     * 
+     * @param testData test data from data provider
+     */
+    @Test(description = "Verify user can login with valid credentials", 
+          dataProvider = "loginData", 
+          dataProviderClass = DataProviderUtils.class)
+    public void testValidLogin(Map<String, String> testData) {
         Log.info("Starting valid login test");
         
-        // Get test data
-        Map<String, String> testData = JsonDataReader.getTestData(TEST_DATA_FILE, "validLoginTest");
         String username = testData.get("username");
         String password = testData.get("password");
         String expectedTitle = testData.get("expectedTitle");
@@ -40,12 +46,17 @@ public class OrangeHrmTests extends BaseTest {
         Log.info("Valid login test completed successfully");
     }
     
-    @Test(description = "Verify error message for invalid login")
-    public void testInvalidLogin() {
+    /**
+     * Verifies error message for invalid login
+     * 
+     * @param testData test data from data provider
+     */
+    @Test(description = "Verify error message for invalid login", 
+          dataProvider = "loginData", 
+          dataProviderClass = DataProviderUtils.class)
+    public void testInvalidLogin(Map<String, String> testData) {
         Log.info("Starting invalid login test");
         
-        // Get test data
-        Map<String, String> testData = JsonDataReader.getTestData(TEST_DATA_FILE, "invalidLoginTest");
         String username = testData.get("username");
         String password = testData.get("password");
         String expectedErrorMessage = testData.get("expectedErrorMessage");
@@ -67,12 +78,17 @@ public class OrangeHrmTests extends BaseTest {
         Log.info("Invalid login test completed successfully");
     }
     
-    @Test(description = "Verify user can navigate to Admin page")
-    public void testNavigateToAdminPage() {
+    /**
+     * Verifies navigation to Admin page
+     * 
+     * @param testData test data from data provider
+     */
+    @Test(description = "Verify user can navigate to Admin page", 
+          dataProvider = "navigationData", 
+          dataProviderClass = DataProviderUtils.class)
+    public void testNavigateToAdminPage(Map<String, String> testData) {
         Log.info("Starting navigation to Admin page test");
         
-        // Get test data
-        Map<String, String> testData = JsonDataReader.getTestData(TEST_DATA_FILE, "adminNavigationTest");
         String username = testData.get("username");
         String password = testData.get("password");
         String expectedHeading = testData.get("expectedHeading");

@@ -1,51 +1,62 @@
 package com.solutions.it.base;
 
-import com.solutions.it.drivers.DriverFactory;
-import com.solutions.it.utils.ConfigReader;
+import com.solutions.it.config.FrameworkConfig;
+import com.solutions.it.drivers.WebDriverManager;
 import com.solutions.it.utils.Log;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
-import java.util.Properties;
-
+/**
+ * Base class for all test classes. 
+ * Provides common setup and teardown operations.
+ */
 public class BaseTest {
-    private static final ThreadLocal<WebDriver> threadLocalDriver = new ThreadLocal<>();
-    protected Properties properties;
+    private static final FrameworkConfig CONFIG = FrameworkConfig.getInstance();
     
+    /**
+     * Sets up the test environment before each test method
+     * 
+     * @param browser Optional browser parameter that can be passed from TestNG
+     */
     @BeforeMethod
-    public void setUp() {
+    @Parameters({"browser"})
+    public void setUp(@Optional String browser) {
         Log.info("Setting up test execution");
-        properties = ConfigReader.loadProperties();
-        String browser = properties.getProperty("browser");
-        WebDriver driver = DriverFactory.createDriver(browser);
         
-        // Configure timeouts
-        long implicitWait = Long.parseLong(properties.getProperty("implicit.wait"));
-        long pageLoadTimeout = Long.parseLong(properties.getProperty("page.load.timeout"));
-        DriverFactory.configureTimeouts(driver, implicitWait, pageLoadTimeout);
+        // Configure browser if provided via TestNG parameters
+        if (browser != null && !browser.isEmpty()) {
+            new FrameworkConfig.Builder().browser(browser).build();
+            Log.info("Using browser from TestNG parameter: " + browser);
+        }
+        
+        // Initialize WebDriver
+        WebDriverManager.initializeDriver();
         
         // Navigate to application URL
-        String url = properties.getProperty("url");
+        WebDriver driver = WebDriverManager.getDriver();
+        String url = CONFIG.getApplicationUrl();
         driver.get(url);
         Log.info("Navigated to: " + url);
-        
-        // Set the driver in ThreadLocal
-        threadLocalDriver.set(driver);
     }
     
+    /**
+     * Cleans up the test environment after each test method
+     */
     @AfterMethod
     public void tearDown() {
-        WebDriver driver = threadLocalDriver.get();
-        if (driver != null) {
-            Log.info("Closing the browser and ending test execution");
-            driver.quit();
-            threadLocalDriver.remove();
-        }
+        Log.info("Closing the browser and ending test execution");
+        WebDriverManager.quitDriver();
     }
     
+    /**
+     * Gets the WebDriver instance for the current thread
+     * 
+     * @return the WebDriver instance
+     */
     public WebDriver getDriver() {
-        return threadLocalDriver.get();
+        return WebDriverManager.getDriver();
     }
 } 
