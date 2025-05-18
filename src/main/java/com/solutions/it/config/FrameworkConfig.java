@@ -130,6 +130,38 @@ public class FrameworkConfig {
     }
     
     /**
+     * Checks if remote execution is enabled (for Docker/Selenium Grid)
+     * 
+     * @return true if remote execution is enabled
+     */
+    public boolean isRemoteExecution() {
+        // Check environment variable first (for Docker)
+        String remoteEnv = System.getenv("SELENIUM_REMOTE");
+        if (remoteEnv != null && !remoteEnv.isEmpty()) {
+            return Boolean.parseBoolean(remoteEnv);
+        }
+        
+        // Otherwise check config property
+        return getBooleanProperty("remote.execution");
+    }
+    
+    /**
+     * Gets the Selenium Grid URL
+     * 
+     * @return the Grid URL
+     */
+    public String getGridUrl() {
+        // Check environment variable first (for Docker)
+        String gridUrlEnv = System.getenv("SELENIUM_GRID_URL");
+        if (gridUrlEnv != null && !gridUrlEnv.isEmpty()) {
+            return gridUrlEnv;
+        }
+        
+        // Otherwise check config property
+        return getProperty("grid.url", "http://localhost:4444/wd/hub");
+    }
+    
+    /**
      * Gets the implicit wait timeout in seconds
      * 
      * @return The implicit wait timeout
@@ -194,6 +226,16 @@ public class FrameworkConfig {
         
         public Builder browser(String browser) {
             getInstance().setDynamicProperty("browser", browser);
+            return this;
+        }
+        
+        public Builder remoteExecution(boolean remote) {
+            getInstance().setDynamicProperty("remote.execution", remote);
+            return this;
+        }
+        
+        public Builder gridUrl(String url) {
+            getInstance().setDynamicProperty("grid.url", url);
             return this;
         }
         

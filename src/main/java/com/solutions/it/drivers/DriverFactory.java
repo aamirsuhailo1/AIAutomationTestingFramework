@@ -12,6 +12,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.time.Duration;
+import java.util.Locale;
 import java.util.Properties;
 
 public class DriverFactory {
@@ -21,10 +22,14 @@ public class DriverFactory {
         Properties properties = ConfigReader.loadProperties();
         boolean headless = Boolean.parseBoolean(properties.getProperty("headless"));
         
-        Log.info("Creating driver for browser: " + browser);
-        Log.info("Headless mode: " + headless);
+        if (Log.getLogger().isInfoEnabled()) {
+            Log.info("Creating driver for browser: " + browser);
+            Log.info("Headless mode: " + headless);
+        }
         
-        switch (browser.toLowerCase()) {
+        String browserName = browser != null ? browser.toLowerCase(Locale.ENGLISH) : "";
+        
+        switch (browserName) {
             case "chrome":
                 WebDriverManager.chromedriver().setup();
                 ChromeOptions chromeOptions = new ChromeOptions();
@@ -64,12 +69,14 @@ public class DriverFactory {
                 break;
                 
             default:
-                Log.warn("Invalid browser specified, defaulting to Chrome");
+                if (Log.getLogger().isWarnEnabled()) {
+                    Log.warn("Invalid browser specified, defaulting to Chrome");
+                }
                 WebDriverManager.chromedriver().setup();
                 driver = new ChromeDriver();
         }
         
-        if (!browser.equalsIgnoreCase("safari") && !headless) {
+        if (browser != null && !"safari".equalsIgnoreCase(browser) && !headless) {
             driver.manage().window().maximize();
         }
         
@@ -79,6 +86,9 @@ public class DriverFactory {
     public static void configureTimeouts(WebDriver driver, long implicitWaitSeconds, long pageLoadTimeoutSeconds) {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWaitSeconds));
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(pageLoadTimeoutSeconds));
-        Log.info("Configured timeouts - Implicit Wait: " + implicitWaitSeconds + "s, Page Load: " + pageLoadTimeoutSeconds + "s");
+        
+        if (Log.getLogger().isInfoEnabled()) {
+            Log.info("Configured timeouts - Implicit Wait: " + implicitWaitSeconds + "s, Page Load: " + pageLoadTimeoutSeconds + "s");
+        }
     }
 } 

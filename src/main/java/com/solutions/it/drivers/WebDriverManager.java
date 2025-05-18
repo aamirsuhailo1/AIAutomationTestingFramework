@@ -9,9 +9,12 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.safari.SafariOptions;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,12 +58,57 @@ public class WebDriverManager {
         String browser = CONFIG.getBrowser().toLowerCase();
         
         WebDriverFactory factory = FACTORIES.getOrDefault(browser, FACTORIES.get("chrome"));
-        WebDriver driver = factory.createDriver();
+        WebDriver driver;
+        
+        // Check if we should use remote WebDriver (for Docker/Grid)
+        if (CONFIG.isRemoteExecution()) {
+            driver = createRemoteWebDriver(browser);
+        } else {
+            driver = factory.createDriver();
+        }
         
         configureTimeouts(driver);
         DRIVER_THREAD_LOCAL.set(driver);
         
-        Log.info("WebDriver initialized for browser: " + browser);
+        if (Log.getLogger().isInfoEnabled()) {
+            Log.info("WebDriver initialized for browser: " + browser + (CONFIG.isRemoteExecution() ? " (remote)" : ""));
+        }
+    }
+    
+    /**
+     * Creates a RemoteWebDriver instance for Selenium Grid
+     * 
+     * @param browser the browser to create
+     * @return the RemoteWebDriver instance
+     */
+    private static WebDriver createRemoteWebDriver(String browser) {
+        try {
+            URL gridUrl = new URL(CONFIG.getGridUrl());
+            
+            switch (browser) {
+                case "firefox":
+                    FirefoxOptions firefoxOptions = new FirefoxOptions();
+                    return new RemoteWebDriver(gridUrl, firefoxOptions);
+                    
+                case "edge":
+                    EdgeOptions edgeOptions = new EdgeOptions();
+                    return new RemoteWebDriver(gridUrl, edgeOptions);
+                
+                case "safari":
+                    SafariOptions safariOptions = new SafariOptions();
+                    return new RemoteWebDriver(gridUrl, safariOptions);
+                    
+                case "chrome":
+                default:
+                    ChromeOptions chromeOptions = new ChromeOptions();
+                    return new RemoteWebDriver(gridUrl, chromeOptions);
+            }
+        } catch (MalformedURLException e) {
+            if (Log.getLogger().isErrorEnabled()) {
+                Log.error("Invalid Grid URL: " + CONFIG.getGridUrl(), e);
+            }
+            throw new RuntimeException("Could not initialize RemoteWebDriver", e);
+        }
     }
     
     /**
@@ -75,7 +123,9 @@ public class WebDriverManager {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(pageLoadTimeout));
         
-        Log.info("Configured timeouts - Implicit Wait: " + implicitWait + "s, Page Load: " + pageLoadTimeout + "s");
+        if (Log.getLogger().isInfoEnabled()) {
+            Log.info("Configured timeouts - Implicit Wait: " + implicitWait + "s, Page Load: " + pageLoadTimeout + "s");
+        }
     }
     
     /**
@@ -84,7 +134,9 @@ public class WebDriverManager {
     public static void quitDriver() {
         WebDriver driver = DRIVER_THREAD_LOCAL.get();
         if (driver != null) {
-            Log.info("Quitting WebDriver instance");
+            if (Log.getLogger().isInfoEnabled()) {
+                Log.info("Quitting WebDriver instance");
+            }
             driver.quit();
             DRIVER_THREAD_LOCAL.remove();
         }
@@ -93,6 +145,7 @@ public class WebDriverManager {
     /**
      * Interface for WebDriver factory implementations
      */
+    @FunctionalInterface
     private interface WebDriverFactory {
         WebDriver createDriver();
     }
@@ -118,7 +171,9 @@ public class WebDriverManager {
             options.addArguments("--disable-notifications");
             options.setAcceptInsecureCerts(true);
             
-            Log.info("Creating Chrome WebDriver with headless=" + headless);
+            if (Log.getLogger().isInfoEnabled()) {
+                Log.info("Creating Chrome WebDriver with headless=" + headless);
+            }
             return new ChromeDriver(options);
         }
     }
@@ -141,7 +196,9 @@ public class WebDriverManager {
             
             options.setAcceptInsecureCerts(true);
             
-            Log.info("Creating Firefox WebDriver with headless=" + headless);
+            if (Log.getLogger().isInfoEnabled()) {
+                Log.info("Creating Firefox WebDriver with headless=" + headless);
+            }
             return new FirefoxDriver(options);
         }
     }
@@ -165,7 +222,9 @@ public class WebDriverManager {
             
             options.setAcceptInsecureCerts(true);
             
-            Log.info("Creating Edge WebDriver with headless=" + headless);
+            if (Log.getLogger().isInfoEnabled()) {
+                Log.info("Creating Edge WebDriver with headless=" + headless);
+            }
             return new EdgeDriver(options);
         }
     }
@@ -177,7 +236,9 @@ public class WebDriverManager {
         @Override
         public WebDriver createDriver() {
             SafariOptions options = new SafariOptions();
-            Log.info("Creating Safari WebDriver");
+            if (Log.getLogger().isInfoEnabled()) {
+                Log.info("Creating Safari WebDriver");
+            }
             return new SafariDriver(options);
         }
     }

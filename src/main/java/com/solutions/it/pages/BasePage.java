@@ -33,7 +33,9 @@ public class BasePage {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(element));
         } catch (Exception e) {
-            Log.error("Element not clickable: " + element.toString(), e);
+            if (Log.getLogger().isErrorEnabled()) {
+                Log.error("Element not clickable: " + element.toString(), e);
+            }
         }
     }
     
@@ -41,7 +43,9 @@ public class BasePage {
         try {
             wait.until(ExpectedConditions.visibilityOf(element));
         } catch (Exception e) {
-            Log.error("Element not visible: " + element.toString(), e);
+            if (Log.getLogger().isErrorEnabled()) {
+                Log.error("Element not visible: " + element.toString(), e);
+            }
         }
     }
     
@@ -51,10 +55,14 @@ public class BasePage {
             shortWait.until(ExpectedConditions.visibilityOf(element));
             return true;
         } catch (TimeoutException e) {
-            Log.warn("Element not quickly visible (using short wait): " + element.toString());
+            if (Log.getLogger().isWarnEnabled()) {
+                Log.warn("Element not quickly visible (using short wait): " + element.toString());
+            }
             return false;
         } catch (Exception e) {
-            Log.error("Error checking element visibility: " + element.toString(), e);
+            if (Log.getLogger().isErrorEnabled()) {
+                Log.error("Error checking element visibility: " + element.toString(), e);
+            }
             return false;
         }
     }
@@ -63,16 +71,28 @@ public class BasePage {
         waitForElementToBeClickable(element);
         try {
             element.click();
-            Log.info("Clicked on element: " + element.toString());
+            if (Log.getLogger().isInfoEnabled()) {
+                Log.info("Clicked on element: " + element.toString());
+            }
         } catch (Exception e) {
-            Log.error("Failed to click element: " + element.toString(), e);
+            if (Log.getLogger().isErrorEnabled()) {
+                Log.error("Failed to click element: " + element.toString(), e);
+            }
+            
             try {
                 // Try JavaScript click as fallback
                 JavascriptExecutor js = (JavascriptExecutor) driver;
                 js.executeScript("arguments[0].click();", element);
-                Log.info("Clicked element using JavaScript: " + element.toString());
+                
+                if (Log.getLogger().isInfoEnabled()) {
+                    Log.info("Clicked element using JavaScript: " + element.toString());
+                }
             } catch (Exception jsException) {
-                Log.error("Failed to click element using JavaScript: " + element.toString(), jsException);
+                if (Log.getLogger().isErrorEnabled()) {
+                    Log.error("Failed to click element using JavaScript: " + element.toString(), jsException);
+                }
+                // Preserve the original exception's stack trace
+                jsException.addSuppressed(e);
                 throw jsException;
             }
         }
@@ -83,9 +103,13 @@ public class BasePage {
         try {
             element.clear();
             element.sendKeys(text);
-            Log.info("Entered text '" + text + "' in element: " + element.toString());
+            if (Log.getLogger().isInfoEnabled()) {
+                Log.info("Entered text '" + text + "' in element: " + element.toString());
+            }
         } catch (Exception e) {
-            Log.error("Failed to enter text in element: " + element.toString(), e);
+            if (Log.getLogger().isErrorEnabled()) {
+                Log.error("Failed to enter text in element: " + element.toString(), e);
+            }
             throw e;
         }
     }
@@ -94,10 +118,14 @@ public class BasePage {
         waitForElementToBeVisible(element);
         try {
             String text = element.getText();
-            Log.info("Got text '" + text + "' from element: " + element.toString());
+            if (Log.getLogger().isInfoEnabled()) {
+                Log.info("Got text '" + text + "' from element: " + element.toString());
+            }
             return text;
         } catch (Exception e) {
-            Log.error("Failed to get text from element: " + element.toString(), e);
+            if (Log.getLogger().isErrorEnabled()) {
+                Log.error("Failed to get text from element: " + element.toString(), e);
+            }
             throw e;
         }
     }
@@ -113,17 +141,24 @@ public class BasePage {
     protected void scrollToElement(WebElement element) {
         try {
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
-            Log.info("Scrolled to element: " + element.toString());
+            if (Log.getLogger().isInfoEnabled()) {
+                Log.info("Scrolled to element: " + element.toString());
+            }
         } catch (Exception e) {
-            Log.error("Failed to scroll to element: " + element.toString(), e);
+            if (Log.getLogger().isErrorEnabled()) {
+                Log.error("Failed to scroll to element: " + element.toString(), e);
+            }
         }
     }
     
     protected void waitForPageLoad() {
         try {
-            wait.until(webDriver -> ((JavascriptExecutor) webDriver)
-                    .executeScript("return document.readyState").equals("complete"));
-            Log.info("Page loaded completely");
+            wait.until(webDriver -> "complete".equals(
+                    ((JavascriptExecutor) webDriver).executeScript("return document.readyState")));
+            
+            if (Log.getLogger().isInfoEnabled()) {
+                Log.info("Page loaded completely");
+            }
             
             // Additional wait for AJAX completions (if any)
             try {
@@ -132,7 +167,9 @@ public class BasePage {
                 Thread.currentThread().interrupt();
             }
         } catch (Exception e) {
-            Log.error("Error waiting for page to load: " + e.getMessage());
+            if (Log.getLogger().isErrorEnabled()) {
+                Log.error("Error waiting for page to load: " + e.getMessage());
+            }
         }
     }
 } 

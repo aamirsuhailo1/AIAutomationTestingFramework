@@ -31,5 +31,11 @@
     "password": "admin123",
     "menuToClick": "MyInfo",
     "expectedHeading": "My Info"
+  },
+  "employeeSearchTest": {
+    "username": "Admin",
+    "password": "admin123",
+    "searchTerm": "Paul",
+    "employeeId": "0221"
   }
 } 

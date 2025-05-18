@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Cross-Browser Test Suite" parallel="tests" thread-count="3">
+    <listeners>
+        <listener class-name="com.solutions.it.listeners.TestListener"/>
+        <listener class-name="com.solutions.it.listeners.RetryListener"/>
+    </listeners>
+    
+    <test name="Cross-Browser Login Test" parallel="methods" thread-count="3">
+        <classes>
+            <class name="com.solutions.tests.OrangeHrmTests">
+                <methods>
+                    <include name="testValidLoginCrossBrowser"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <test name="Cross-Browser Invalid Login Test" parallel="methods" thread-count="3">
+        <classes>
+            <class name="com.solutions.tests.OrangeHrmTests">
+                <methods>
+                    <include name="testInvalidLoginCrossBrowser"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <test name="Cross-Browser Navigation Test" parallel="methods" thread-count="3">
+        <classes>
+            <class name="com.solutions.tests.OrangeHrmTests">
+                <methods>
+                    <include name="testNavigateToAdminPageCrossBrowser"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite> 
